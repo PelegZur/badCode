@@ -6,6 +6,8 @@ try:
     from django.core import urlresolvers
 except ImportError:
     from django import urls as urlresolvers
+
+
 try:
     from django.urls.exceptions import NoReverseMatch
 except ImportError:
@@ -23,6 +25,9 @@ class LogEntryAdminMixin(object):
     created.short_description = 'Created'
 
     def user_url(self, obj):
+
+
+        
         if obj.actor:
             app_label, model = settings.AUTH_USER_MODEL.split('.')
             viewname = 'admin:%s_%s_change' % (app_label, model.lower())
@@ -42,6 +47,8 @@ class LogEntryAdminMixin(object):
         s = '' if len(changes) == 1 else 's'
         fields = ', '.join(changes.keys())
         if len(fields) > MAX:
+
+            
             i = fields.rfind(' ', 0, MAX)
             fields = fields[:i] + ' ..'
         return '%d change%s: %s' % (len(changes), s, fields)
@@ -53,12 +60,16 @@ class LogEntryAdminMixin(object):
         changes = json.loads(obj.changes)
         msg = '<table><tr><th>#</th><th>Field</th><th>From</th><th>To</th></tr>'
         for i, field in enumerate(sorted(changes), 1):
+
+            
             value = [i, field] + (['***', '***'] if field == 'password' else changes[field])
             msg += format_html('<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>', *value)
 
         msg += '</table>'
         return mark_safe(msg)
     msg.short_description = 'Changes'
+
+
 
 
 class State(models.Model):
@@ -70,8 +81,12 @@ class City(models.Model):
 class Student(models.Model):
     name=models.CharField(max_length=150)
     state_id=models.PositiveIntegerField()
+
+    
     city_id=models.PositiveIntegerField()
     is_active = models.BooleanField(default=False)
+
+
 
 students = Student.objects.filter(
         is_active=True,
